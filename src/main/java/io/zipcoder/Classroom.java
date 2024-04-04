@@ -49,59 +49,40 @@ public class Classroom {
         }
         return filteredList;
     }
+    public ArrayList<Student> getStudentsByScore(){
+        students.sort(Collections.reverseOrder());
+        return students;
+    }
 
-
-
-
-
-
-    public ArrayList<Double> getStudentsByScore(){
-        ArrayList<Double> orderedByScore = new ArrayList<>();
-        for (Student student : students){
-            orderedByScore.add(student.getAverageExamScore());
-        }
-        Collections.sort(orderedByScore, Collections.reverseOrder());
-
-        return orderedByScore;
+    public double percentile(int index , int length){
+        double percentile = (double) index/length * 100.0;
+        return Math.round(percentile*100.0) / 100.0;
     }
 
 
 
-    public HashMap getGradeBook() {
-        ArrayList<Double> orderedByScore = getStudentsByScore();
+
+    public HashMap<Student, String> getGradeBook() {
+        ArrayList<Student> orderedByScore = getStudentsByScore();
         HashMap<Student,String> studentGrades = new HashMap<>();
-
-
-        int a = (int) Math.ceil((getStudentsByScore().size() * .1));
-        int b = (int) Math.ceil((getStudentsByScore().size() * .3));
-        int c = (int) Math.ceil((getStudentsByScore().size() * .5));
-        int d = (int) Math.ceil((getStudentsByScore().size() * .5));
-        int f = getStudentsByScore().size();
-
         for (int i = 0; i < orderedByScore.size(); i++) {
-            switch(i){
-                case(i > 0 && i < orderedByScore.get(a)) :
-                    studentGrades.put(orderedByScore.get(i),"A");
-
-                case(i > a && i < orderedByScore.get(b)) :
-                    studentGrades.put(orderedByScore.get(i),"B");
-
-                case(i > b && i < orderedByScore.get(c)) :
-                    studentGrades.put(orderedByScore.get(i),"C");
-
-                case(i > c && i < orderedByScore.get(d)) :
-                    studentGrades.put(orderedByScore.get(i),"D");
-
-                case(i > d && i < orderedByScore.get(f+1)) :
-                    studentGrades.put(orderedByScore.get(i),"F");
-
-                default :
-                    
-            }
+            double percen = percentile(i,orderedByScore.size());
+                if(percen >= 90) {
+                    studentGrades.put(orderedByScore.get(i), "A");
+                }
+                if(percen >= 71) {
+                    studentGrades.put(orderedByScore.get(i), "B");
+                }
+                if(percen >= 50) {
+                    studentGrades.put(orderedByScore.get(i), "C");
+                }
+                if(percen >= 11) {
+                    studentGrades.put(orderedByScore.get(i), "D");
+                }
+                else {
+                    studentGrades.put(orderedByScore.get(i), "F");
+                }
         }
         return studentGrades;
     }
-
-
-
 }
